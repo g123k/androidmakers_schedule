@@ -1,0 +1,204 @@
+"""Exposes a URL that specifies the behaviour of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behaviour of this scalar."""
+  url: String!
+) on SCALAR
+
+"""Indicates an Input Object is a OneOf Input Object."""
+directive @oneOf on INPUT_OBJECT
+
+type _Service {
+  sdl: String!
+}
+
+type BookmarkConnection {
+  nodes: [Session!]!
+}
+
+type Bookmarks {
+  id: String!
+  sessionIds: [String!]!
+}
+
+type Conference {
+  days: [LocalDate!]!
+  id: String!
+  name: String!
+  themeColor: String
+  timezone: String!
+}
+
+enum ConferenceField {
+  DAYS
+}
+
+input ConferenceOrderByInput {
+  direction: OrderByDirection!
+  field: ConferenceField!
+}
+
+"""A type representing a formatted kotlinx.datetime.Instant"""
+scalar Instant
+
+type Link {
+  type: LinkType!
+  url: String!
+}
+
+enum LinkType {
+  YouTube
+  Audio
+  AudioUncompressed
+  Other
+}
+
+"""A type representing a formatted kotlinx.datetime.LocalDate"""
+scalar LocalDate
+
+"""A type representing a formatted kotlinx.datetime.LocalDateTime"""
+scalar LocalDateTime
+
+input LocalDateTimeFilterInput {
+  after: LocalDateTime
+  before: LocalDateTime
+}
+
+type Mutation {
+  addBookmark(sessionId: String!): Bookmarks!
+  removeBookmark(sessionId: String!): Bookmarks!
+}
+
+enum OrderByDirection {
+  ASCENDING
+  DESCENDING
+}
+
+type PageInfo {
+  endCursor: String
+}
+
+type Partner {
+  logoUrl: String!
+  name: String!
+  url: String!
+}
+
+type PartnerGroup {
+  partners: [Partner!]!
+  title: String!
+}
+
+type Query {
+  bookmarkConnection: BookmarkConnection
+  bookmarks: Bookmarks @deprecated(reason: "Use bookmarkConnection instead")
+  conferences(orderBy: ConferenceOrderByInput): [Conference!]!
+  config: Conference!
+  partnerGroups: [PartnerGroup!]!
+  rooms: [Room!]!
+  session(id: String!): Session!
+  sessions(first: Int, after: String, filter: SessionFilterInput, orderBy: SessionOrderByInput): SessionConnection!
+  speaker(id: String!): Speaker!
+  speakers: [Speaker!]! @deprecated(reason: "Use speakersPage instead")
+  speakersPage(first: Int, after: String): SpeakerConnection!
+  venue(id: String!): Venue!
+  venues: [Venue!]!
+  _service: _Service!
+}
+
+type Room {
+  capacity: Int
+  id: String!
+  name: String!
+}
+
+type Session {
+  complexity: String
+  description: String
+  endInstant: Instant! @deprecated(reason: "use endsAt instead")
+  endsAt: LocalDateTime!
+  feedbackId: String
+  id: String!
+
+  """
+  An [IETF language code](https://en.wikipedia.org/wiki/IETF_language_tag) like en-US
+  """
+  language: String
+  links: [Link!]!
+
+  """
+  A shorter version of description for use when real estate is scarce like watches for an example.
+  This field might have the same value as description if a shortDescription is not available
+  """
+  shortDescription: String
+  startInstant: Instant! @deprecated(reason: "use startsAt instead")
+  startsAt: LocalDateTime!
+  tags: [String!]!
+  title: String!
+
+  """
+  One of "break", "lunch", "party", "keynote", "talk" or any other conference-specific format
+  """
+  type: String!
+  room: Room
+  rooms: [Room!]!
+  speakers: [Speaker!]!
+}
+
+type SessionConnection {
+  nodes: [Session!]!
+  pageInfo: PageInfo!
+}
+
+enum SessionField {
+  STARTS_AT
+}
+
+input SessionFilterInput {
+  endsAt: LocalDateTimeFilterInput
+  startsAt: LocalDateTimeFilterInput
+}
+
+input SessionOrderByInput {
+  direction: OrderByDirection!
+  field: SessionField!
+}
+
+type Social {
+  icon: String
+  link: String! @deprecated(reason: "use url instead, replace with url")
+  name: String!
+  url: String!
+}
+
+type Speaker {
+  bio: String
+  city: String
+  company: String
+  companyLogoUrl: String
+  id: String!
+  name: String!
+  photoUrl: String
+  photoUrlThumbnail: String
+  socials: [Social!]!
+  tagline: String
+  sessions: [Session!]!
+}
+
+type SpeakerConnection {
+  nodes: [Speaker!]!
+  pageInfo: PageInfo!
+}
+
+type Venue {
+  address: String
+  coordinates: String @deprecated(reason: "use latitude and longitude instead")
+  descriptionFr: String! @deprecated(reason: "use description(language: \"fr\") instead")
+  floorPlanUrl: String
+  id: String!
+  imageUrl: String
+  latitude: Float
+  longitude: Float
+  name: String!
+  description(language: String): String!
+}
+

@@ -1,0 +1,20 @@
+query AllSessions {
+    sessions(first: 500) {
+        nodes {
+            language
+            title
+            startsAt
+            description
+            room   {
+                id
+                name
+            }
+            speakers {
+                name
+                photoUrl
+            }
+            id
+            endsAt
+        }
+    }
+}

@@ -1,0 +1,9 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    always_specify_types: true
+    avoid_annotating_with_dynamic: true
+    prefer_final_in_for_each: true
+    prefer_final_locals: true
+    require_trailing_commas: true
