@@ -1,4 +1,4 @@
-import 'package:androidmakers_schedule/api/requests/__generated__/all_sessions.data.gql.dart';
+import 'package:androidmakers_schedule/api/schedule/requests/__generated__/all_sessions.data.gql.dart';
 import 'package:ferry/typed_links.dart';
 
 part 'session.g.dart';
@@ -17,6 +17,10 @@ class Session {
   final DateTime endDate;
   @HiveField(5)
   final Iterable<Speaker> speakers;
+  @HiveField(6)
+  final Room? room;
+  @HiveField(7)
+  final String type;
 
   Session(
     this.title,
@@ -25,6 +29,8 @@ class Session {
     this.startDate,
     this.endDate,
     this.speakers,
+    this.room,
+    this.type,
   );
 
   Session.fromAPI(GAllSessionsData_sessions_nodes node)
@@ -36,12 +42,39 @@ class Session {
               Speaker.fromAPI(speaker),
         ),
         startDate = DateTime.parse(node.startsAt.value),
-        endDate = DateTime.parse(node.endsAt.value);
+        endDate = DateTime.parse(node.endsAt.value),
+        room = Room.fromString(node.room?.name),
+        type = node.type;
 
   @override
   String toString() {
     return 'Session{title: $title}';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Session &&
+          runtimeType == other.runtimeType &&
+          title == other.title &&
+          description == other.description &&
+          language == other.language &&
+          startDate == other.startDate &&
+          endDate == other.endDate &&
+          speakers == other.speakers &&
+          room == other.room &&
+          type == other.type;
+
+  @override
+  int get hashCode =>
+      title.hashCode ^
+      description.hashCode ^
+      language.hashCode ^
+      startDate.hashCode ^
+      endDate.hashCode ^
+      speakers.hashCode ^
+      room.hashCode ^
+      type.hashCode;
 }
 
 @HiveType(typeId: 101)
@@ -62,7 +95,7 @@ enum Language {
   }
 }
 
-@HiveType(typeId: 102)
+@HiveType(typeId: 103)
 class Speaker {
   @HiveField(0)
   final String name;
@@ -82,22 +115,48 @@ class Speaker {
   String toString() {
     return 'Speaker{name: $name, photo: $photo}';
   }
-}
-
-@HiveType(typeId: 103)
-class Room {
-  @HiveField(0)
-  final String id;
-  @HiveField(1)
-  final String name;
-
-  Room(
-    this.id,
-    this.name,
-  );
 
   @override
-  String toString() {
-    return 'Room{id: $id, name: $name}';
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Speaker &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          photo == other.photo;
+
+  @override
+  int get hashCode => name.hashCode ^ photo.hashCode;
+}
+
+@HiveType(typeId: 104)
+enum Room {
+  @HiveField(0)
+  first('Moebius'),
+  @HiveField(1)
+  second('Blin'),
+  @HiveField(2)
+  third('2.02'),
+  @HiveField(3)
+  forth('2.04'),
+  @HiveField(4)
+  fifth('Dev Lounge'),
+  @HiveField(5)
+  unknown('-');
+
+  final String name;
+
+  const Room(this.name);
+
+  static Room fromString(String? name) {
+    if (name == null) {
+      return Room.unknown;
+    }
+
+    final String realName = name.replaceFirst('Salle', '').trim().toLowerCase();
+
+    return Room.values.firstWhere(
+      (Room element) => element.name.toLowerCase() == realName,
+      orElse: () => Room.unknown,
+    );
   }
 }

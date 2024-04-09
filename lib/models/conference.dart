@@ -1,4 +1,5 @@
 import 'package:androidmakers_schedule/models/slot.dart';
+import 'package:androidmakers_schedule/utils/date_utils.dart';
 import 'package:ferry/typed_links.dart';
 
 part 'conference.g.dart';
@@ -31,4 +32,22 @@ class Conference {
   String toString() {
     return 'Conference{slots: $slots, startDate: $startDate, endDate: $endDate}';
   }
+
+  Iterable<Slot> getSlotsForDate(DateTime today) => slots.where(
+        (Slot slot) => slot.startDate.isSameDay(today),
+      );
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Conference &&
+          runtimeType == other.runtimeType &&
+          slots == other.slots &&
+          startDate == other.startDate &&
+          endDate == other.endDate &&
+          days == other.days;
+
+  @override
+  int get hashCode =>
+      slots.hashCode ^ startDate.hashCode ^ endDate.hashCode ^ days.hashCode;
 }

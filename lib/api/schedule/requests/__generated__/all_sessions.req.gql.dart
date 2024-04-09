@@ -2,13 +2,13 @@
 // ignore_for_file: type=lint
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:androidmakers_schedule/api/model/__generated__/serializers.gql.dart'
+import 'package:androidmakers_schedule/api/schedule/model/__generated__/serializers.gql.dart'
     as _i6;
-import 'package:androidmakers_schedule/api/requests/__generated__/all_sessions.ast.gql.dart'
+import 'package:androidmakers_schedule/api/schedule/requests/__generated__/all_sessions.ast.gql.dart'
     as _i5;
-import 'package:androidmakers_schedule/api/requests/__generated__/all_sessions.data.gql.dart'
+import 'package:androidmakers_schedule/api/schedule/requests/__generated__/all_sessions.data.gql.dart'
     as _i2;
-import 'package:androidmakers_schedule/api/requests/__generated__/all_sessions.var.gql.dart'
+import 'package:androidmakers_schedule/api/schedule/requests/__generated__/all_sessions.var.gql.dart'
     as _i3;
 import 'package:built_value/built_value.dart';
 import 'package:built_value/serializer.dart';

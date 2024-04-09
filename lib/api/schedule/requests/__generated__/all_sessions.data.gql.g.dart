@@ -160,6 +160,8 @@ class _$GAllSessionsData_sessions_nodesSerializer
       'endsAt',
       serializers.serialize(object.endsAt,
           specifiedType: const FullType(_i2.GLocalDateTime)),
+      'type',
+      serializers.serialize(object.type, specifiedType: const FullType(String)),
     ];
     Object? value;
     value = object.language;
@@ -240,6 +242,10 @@ class _$GAllSessionsData_sessions_nodesSerializer
           result.endsAt.replace(serializers.deserialize(value,
                   specifiedType: const FullType(_i2.GLocalDateTime))!
               as _i2.GLocalDateTime);
+          break;
+        case 'type':
+          result.type = serializers.deserialize(value,
+              specifiedType: const FullType(String))! as String;
           break;
       }
     }
@@ -628,6 +634,8 @@ class _$GAllSessionsData_sessions_nodes
   final String id;
   @override
   final _i2.GLocalDateTime endsAt;
+  @override
+  final String type;
 
   factory _$GAllSessionsData_sessions_nodes(
           [void Function(GAllSessionsData_sessions_nodesBuilder)? updates]) =>
@@ -642,7 +650,8 @@ class _$GAllSessionsData_sessions_nodes
       this.room,
       required this.speakers,
       required this.id,
-      required this.endsAt})
+      required this.endsAt,
+      required this.type})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         G__typename, r'GAllSessionsData_sessions_nodes', 'G__typename');
@@ -656,6 +665,8 @@ class _$GAllSessionsData_sessions_nodes
         id, r'GAllSessionsData_sessions_nodes', 'id');
     BuiltValueNullFieldError.checkNotNull(
         endsAt, r'GAllSessionsData_sessions_nodes', 'endsAt');
+    BuiltValueNullFieldError.checkNotNull(
+        type, r'GAllSessionsData_sessions_nodes', 'type');
   }
 
   @override
@@ -679,7 +690,8 @@ class _$GAllSessionsData_sessions_nodes
         room == other.room &&
         speakers == other.speakers &&
         id == other.id &&
-        endsAt == other.endsAt;
+        endsAt == other.endsAt &&
+        type == other.type;
   }
 
   @override
@@ -694,6 +706,7 @@ class _$GAllSessionsData_sessions_nodes
     _$hash = $jc(_$hash, speakers.hashCode);
     _$hash = $jc(_$hash, id.hashCode);
     _$hash = $jc(_$hash, endsAt.hashCode);
+    _$hash = $jc(_$hash, type.hashCode);
     _$hash = $jf(_$hash);
     return _$hash;
   }
@@ -709,7 +722,8 @@ class _$GAllSessionsData_sessions_nodes
           ..add('room', room)
           ..add('speakers', speakers)
           ..add('id', id)
-          ..add('endsAt', endsAt))
+          ..add('endsAt', endsAt)
+          ..add('type', type))
         .toString();
   }
 }
@@ -765,6 +779,10 @@ class GAllSessionsData_sessions_nodesBuilder
       _$this._endsAt ??= new _i2.GLocalDateTimeBuilder();
   set endsAt(_i2.GLocalDateTimeBuilder? endsAt) => _$this._endsAt = endsAt;
 
+  String? _type;
+  String? get type => _$this._type;
+  set type(String? type) => _$this._type = type;
+
   GAllSessionsData_sessions_nodesBuilder() {
     GAllSessionsData_sessions_nodes._initializeBuilder(this);
   }
@@ -781,6 +799,7 @@ class GAllSessionsData_sessions_nodesBuilder
       _speakers = $v.speakers.toBuilder();
       _id = $v.id;
       _endsAt = $v.endsAt.toBuilder();
+      _type = $v.type;
       _$v = null;
     }
     return this;
@@ -816,7 +835,9 @@ class GAllSessionsData_sessions_nodesBuilder
               speakers: speakers.build(),
               id: BuiltValueNullFieldError.checkNotNull(
                   id, r'GAllSessionsData_sessions_nodes', 'id'),
-              endsAt: endsAt.build());
+              endsAt: endsAt.build(),
+              type: BuiltValueNullFieldError.checkNotNull(
+                  type, r'GAllSessionsData_sessions_nodes', 'type'));
     } catch (_) {
       late String _$failedField;
       try {

@@ -1,4 +1,4 @@
-import 'package:androidmakers_schedule/ui/clock.dart';
+import 'package:androidmakers_schedule/ui/overlays/clock.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 
@@ -59,7 +59,7 @@ class _NetworkIndicatorState extends State<_NetworkIndicator> {
           width: 10.0,
           height: 10.0,
           decoration: BoxDecoration(
-            color: _getColor(data.data).withOpacity(0.5),
+            color: _getColor(data.data)?.withOpacity(0.5),
             shape: BoxShape.circle,
           ),
         );
@@ -67,13 +67,13 @@ class _NetworkIndicatorState extends State<_NetworkIndicator> {
     );
   }
 
-  Color _getColor(List<ConnectivityResult>? data) {
+  Color? _getColor(List<ConnectivityResult>? data) {
     if (data == null) {
       return Colors.black;
     } else if (data.isEmpty) {
       return Colors.orange;
     } else {
-      return Colors.transparent;
+      return null;
     }
   }
 }

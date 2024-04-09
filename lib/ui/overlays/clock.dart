@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:androidmakers_schedule/ui/res/app_colors.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class Clock extends StatefulWidget {
   const Clock({super.key});
@@ -13,6 +14,7 @@ class Clock extends StatefulWidget {
 
 class _ClockState extends State<Clock> {
   late Timer _timer;
+  final NumberFormat _numberFormat = NumberFormat('00');
   DateTime _date = DateTime.now();
 
   @override
@@ -33,17 +35,21 @@ class _ClockState extends State<Clock> {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.sizeOf(context).width;
     return Container(
-      width: screenWidth * 0.17,
+      width: screenWidth * 0.13,
       color: AppColors.red,
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: screenWidth * 0.027,
-          vertical: screenWidth * 0.008,
+          horizontal: screenWidth * 0.005,
+          vertical: screenWidth * 0.004,
         ),
-        child: FittedBox(
-          child: Text(
-            '${formatTime(_date.hour)}:${formatTime(_date.minute)}',
-            style: GoogleFonts.montserrat().copyWith(fontSize: 50.0),
+        child: AutoSizeText(
+          '${formatTime(_date.hour)}:${formatTime(_date.minute)}',
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          style: const TextStyle(
+            fontFamily: 'Montserrat',
+            fontSize: 40.0,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
@@ -51,7 +57,7 @@ class _ClockState extends State<Clock> {
   }
 
   String formatTime(int value) {
-    return value.toString().padLeft(2);
+    return _numberFormat.format(value);
   }
 
   @override

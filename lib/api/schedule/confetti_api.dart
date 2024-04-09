@@ -1,8 +1,8 @@
-import 'package:androidmakers_schedule/api/model/__generated__/schema.schema.gql.dart'
+import 'package:androidmakers_schedule/api/schedule/model/__generated__/schema.schema.gql.dart'
     show possibleTypesMap;
-import 'package:androidmakers_schedule/api/requests/__generated__/all_sessions.data.gql.dart';
-import 'package:androidmakers_schedule/api/requests/__generated__/all_sessions.req.gql.dart';
-import 'package:androidmakers_schedule/api/requests/__generated__/all_sessions.var.gql.dart';
+import 'package:androidmakers_schedule/api/schedule/requests/__generated__/all_sessions.data.gql.dart';
+import 'package:androidmakers_schedule/api/schedule/requests/__generated__/all_sessions.req.gql.dart';
+import 'package:androidmakers_schedule/api/schedule/requests/__generated__/all_sessions.var.gql.dart';
 import 'package:ferry/ferry.dart';
 import 'package:ferry_hive_store/ferry_hive_store.dart';
 import 'package:gql_http_link/gql_http_link.dart';

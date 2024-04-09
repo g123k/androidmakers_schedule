@@ -23,13 +23,15 @@ class SessionAdapter extends TypeAdapter<Session> {
       fields[3] as DateTime,
       fields[4] as DateTime,
       (fields[5] as List).cast<Speaker>(),
+      fields[6] as Room?,
+      fields[7] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, Session obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -41,7 +43,11 @@ class SessionAdapter extends TypeAdapter<Session> {
       ..writeByte(4)
       ..write(obj.endDate)
       ..writeByte(5)
-      ..write(obj.speakers.toList());
+      ..write(obj.speakers.toList())
+      ..writeByte(6)
+      ..write(obj.room)
+      ..writeByte(7)
+      ..write(obj.type);
   }
 
   @override
@@ -57,7 +63,7 @@ class SessionAdapter extends TypeAdapter<Session> {
 
 class SpeakerAdapter extends TypeAdapter<Speaker> {
   @override
-  final int typeId = 102;
+  final int typeId = 103;
 
   @override
   Speaker read(BinaryReader reader) {
@@ -88,43 +94,6 @@ class SpeakerAdapter extends TypeAdapter<Speaker> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is SpeakerAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
-}
-
-class RoomAdapter extends TypeAdapter<Room> {
-  @override
-  final int typeId = 103;
-
-  @override
-  Room read(BinaryReader reader) {
-    final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
-    return Room(
-      fields[0] as String,
-      fields[1] as String,
-    );
-  }
-
-  @override
-  void write(BinaryWriter writer, Room obj) {
-    writer
-      ..writeByte(2)
-      ..writeByte(0)
-      ..write(obj.id)
-      ..writeByte(1)
-      ..write(obj.name);
-  }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is RoomAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
@@ -164,6 +133,65 @@ class LanguageAdapter extends TypeAdapter<Language> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is LanguageAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class RoomAdapter extends TypeAdapter<Room> {
+  @override
+  final int typeId = 104;
+
+  @override
+  Room read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return Room.first;
+      case 1:
+        return Room.second;
+      case 2:
+        return Room.third;
+      case 3:
+        return Room.forth;
+      case 4:
+        return Room.fifth;
+      case 5:
+        return Room.unknown;
+      default:
+        return Room.first;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, Room obj) {
+    switch (obj) {
+      case Room.first:
+        writer.writeByte(0);
+        break;
+      case Room.second:
+        writer.writeByte(1);
+        break;
+      case Room.third:
+        writer.writeByte(2);
+        break;
+      case Room.forth:
+        writer.writeByte(3);
+        break;
+      case Room.fifth:
+        writer.writeByte(4);
+        break;
+      case Room.unknown:
+        writer.writeByte(5);
+        break;
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RoomAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

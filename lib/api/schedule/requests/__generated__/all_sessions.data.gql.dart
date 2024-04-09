@@ -2,9 +2,9 @@
 // ignore_for_file: type=lint
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:androidmakers_schedule/api/model/__generated__/schema.schema.gql.dart'
+import 'package:androidmakers_schedule/api/schedule/model/__generated__/schema.schema.gql.dart'
     as _i2;
-import 'package:androidmakers_schedule/api/model/__generated__/serializers.gql.dart'
+import 'package:androidmakers_schedule/api/schedule/model/__generated__/serializers.gql.dart'
     as _i1;
 import 'package:built_collection/built_collection.dart';
 import 'package:built_value/built_value.dart';
@@ -93,6 +93,7 @@ abstract class GAllSessionsData_sessions_nodes
   BuiltList<GAllSessionsData_sessions_nodes_speakers> get speakers;
   String get id;
   _i2.GLocalDateTime get endsAt;
+  String get type;
   static Serializer<GAllSessionsData_sessions_nodes> get serializer =>
       _$gAllSessionsDataSessionsNodesSerializer;
 

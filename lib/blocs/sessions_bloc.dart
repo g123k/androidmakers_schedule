@@ -1,17 +1,20 @@
-import 'package:androidmakers_schedule/api/confetti_api.dart';
-import 'package:androidmakers_schedule/api/requests/__generated__/all_sessions.data.gql.dart';
+import 'package:androidmakers_schedule/api/schedule/confetti_api.dart';
+import 'package:androidmakers_schedule/api/schedule/requests/__generated__/all_sessions.data.gql.dart';
 import 'package:androidmakers_schedule/models/conference.dart';
 import 'package:androidmakers_schedule/models/session.dart';
 import 'package:androidmakers_schedule/models/slot.dart';
 import 'package:androidmakers_schedule/utils/date_utils.dart';
+import 'package:androidmakers_schedule/utils/string_utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-abstract class _SessionsEvent {}
+abstract class _SessionsEvent {
+  const _SessionsEvent();
+}
 
 class ReloadSessionsEvent extends _SessionsEvent {
   final bool force;
 
-  ReloadSessionsEvent({this.force = false});
+  const ReloadSessionsEvent({this.force = false});
 }
 
 class SessionsBloc extends Bloc<_SessionsEvent, SessionsState> {
@@ -31,11 +34,19 @@ class SessionsBloc extends Bloc<_SessionsEvent, SessionsState> {
       forceReload: (event as ReloadSessionsEvent).force,
     );
 
-    final List<Session> sessions = <Session>[];
     final Map<DateTime, List<Session>> tmpSlots = <DateTime, List<Session>>{};
 
     for (final GAllSessionsData_sessions_nodes node in data) {
       final Session session = Session.fromAPI(node);
+
+      if (session.type == 'service' &&
+          (session.title.containsIgnoreCase('welcome') ||
+              session.title.containsIgnoreCase('break') ||
+              session.title.containsIgnoreCase('registration'))) {
+        continue;
+      } else if (session.room == null || session.room == Room.unknown) {
+        continue;
+      }
 
       if (tmpSlots[session.startDate] == null) {
         tmpSlots[session.startDate] = <Session>[session];
@@ -51,6 +62,10 @@ class SessionsBloc extends Bloc<_SessionsEvent, SessionsState> {
     final Set<DateTime> dates = <DateTime>{};
     for (final DateTime startTime in timeSlots) {
       final List<Session> sessions = tmpSlots[startTime]!;
+      sessions.sort(
+        (Session a, Session b) =>
+            (a.room?.index ?? 0).compareTo((b.room?.index ?? 0)),
+      );
       slots.add(
         Slot(startTime, sessions.first.endDate, sessions),
       );
@@ -64,7 +79,7 @@ class SessionsBloc extends Bloc<_SessionsEvent, SessionsState> {
     final List<DateTime> days = dates.toList(growable: false)..sort();
 
     // Remove incorrect slots
-    final DateTime today = DateTime.now();
+    final DateTime today = DateUtils.today.$1;
     final DateTime minFirstDay = slots.first.startDate.getMinValue();
     final DateTime maxFirstDay = slots.first.startDate.getMaxValue();
     final DateTime minLastDay = slots.last.startDate.getMinValue();
@@ -90,8 +105,6 @@ class SessionsBloc extends Bloc<_SessionsEvent, SessionsState> {
         }
       }
     }
-
-    print(slots.length);
 
     emit(
       LoadedSessionsState._(Conference.fromSlots(slots, days)),
@@ -125,6 +138,8 @@ class LoadedSessionsState extends SessionsState {
   DateTime get endDate => _conference!.endDate;
 
   List<Slot> get slots => _conference!.slots;
+
+  Conference get conference => _conference!;
 }
 
 class ErrorLoadingSessionsState extends SessionsState {

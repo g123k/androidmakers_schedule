@@ -4,8 +4,8 @@ targets:
       ferry_generator|graphql_builder:
         enabled: true
         options:
-          schema: androidmakers_schedule|lib/api/model/schema.graphql
+          schema: androidmakers_schedule|lib/api/schedule/model/schema.graphql
       ferry_generator|serializer_builder:
         enabled: true
         options:
-          schema: androidmakers_schedule|lib/api/model/schema.graphql
+          schema: androidmakers_schedule|lib/api/schedule/model/schema.graphql

@@ -22,4 +22,16 @@ class Slot {
   String toString() {
     return 'Slot{startDate: $startDate, endDate: $endDate, sessions: $sessions}';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Slot &&
+          runtimeType == other.runtimeType &&
+          sessions == other.sessions &&
+          startDate == other.startDate &&
+          endDate == other.endDate;
+
+  @override
+  int get hashCode => sessions.hashCode ^ startDate.hashCode ^ endDate.hashCode;
 }
