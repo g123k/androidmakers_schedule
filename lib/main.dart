@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:androidmakers_schedule/blocs/panel_bloc.dart';
 import 'package:androidmakers_schedule/blocs/sessions_bloc.dart';
 import 'package:androidmakers_schedule/models/session.dart';
@@ -8,9 +10,24 @@ import 'package:androidmakers_schedule/ui/res/app_colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:window_manager/window_manager.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  if (Platform.isLinux || Platform.isMacOS) {
+    await windowManager.ensureInitialized();
+
+    const WindowOptions options = WindowOptions(
+      fullScreen: true,
+      titleBarStyle: TitleBarStyle.hidden,
+    );
+
+    windowManager.waitUntilReadyToShow(options, () async {
+      await windowManager.show();
+      await windowManager.focus();
+    });
+  }
   runApp(const MyApp());
 }
 
