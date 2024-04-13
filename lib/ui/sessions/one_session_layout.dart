@@ -13,15 +13,15 @@ class OneSessionLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          const SizedBox(height: 50),
-          const _OneSessionHeader(),
-          SizedBox(
-            height: MediaQuery.sizeOf(context).height * 0.47,
-            child: const _OneSessionItem(),
+          SizedBox(height: 50),
+          Expanded(flex: 31, child: _OneSessionHeader()),
+          Expanded(
+            flex: 47,
+            child: _OneSessionItem(),
           ),
         ],
       ),
@@ -45,25 +45,36 @@ class _OneSessionHeader extends StatelessWidget {
 
     if (slot.isFirstSlot) {
       children = <Widget>[
-        const Text(
-          'Welcome!',
-          style: TextStyle(
-            fontSize: 50,
-            fontWeight: FontWeight.w800,
-            fontFamily: 'Montserrat',
+        const Expanded(
+          flex: 4,
+          child: AutoSizeText(
+            'Welcome!',
+            maxLines: 1,
+            style: TextStyle(
+              fontSize: 50,
+              fontWeight: FontWeight.w800,
+              fontFamily: 'Montserrat',
+            ),
           ),
         ),
-        const SizedBox(height: 10.0),
-        const Text(
-          'The event will begin in a few minutes',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 40.0,
-            fontWeight: FontWeight.w500,
-            fontFamily: 'Montserrat',
+        const Spacer(flex: 1),
+        const Expanded(
+          flex: 6,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            child: AutoSizeText(
+              'The event will begin in a few minutes',
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              style: TextStyle(
+                fontSize: 40.0,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Montserrat',
+              ),
+            ),
           ),
         ),
-        const SizedBox(height: 40.0),
+        const Spacer(flex: 1),
       ];
     } else {
       final DateFormat formatter = DateFormat('HH:mm');
@@ -103,64 +114,68 @@ class _OneSessionItem extends StatelessWidget {
     final Session session = slot.sessions.first;
     final bool isService = session.type == 'service';
 
-    return Row(
-      children: <Widget>[
-        if (!isService)
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0),
+      child: Row(
+        children: <Widget>[
+          if (!isService)
+            Expanded(
+              flex: 8,
+              child: RoomName(room: session.room),
+            ),
           Expanded(
-            flex: 8,
-            child: RoomName(room: session.room),
-          ),
-        Expanded(
-          flex: 90,
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                flex: 4,
-                child: Container(
-                  width: double.infinity,
-                  color: AppColors.red,
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 30,
-                    horizontal: 60,
-                  ),
-                  alignment: Alignment.center,
-                  child: AutoSizeText(
-                    session.title,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 1000,
-                      fontFamily: 'Montserrat',
-                    ),
-                  ),
-                ),
-              ),
-              if (!isService)
+            flex: 90,
+            child: Column(
+              children: <Widget>[
                 Expanded(
-                  flex: 6,
+                  flex: 4,
                   child: Container(
-                    color: Colors.white,
-                    padding: const EdgeInsets.all(15.0),
-                    child: Center(
-                      child: IntrinsicWidth(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: session.speakers
-                              .map(
-                                (Speaker speaker) =>
-                                    _OneSessionSpeakerItem(speaker: speaker),
-                              )
-                              .toList(growable: false),
-                        ),
+                    width: double.infinity,
+                    color: AppColors.red,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 20,
+                      horizontal: 60,
+                    ),
+                    alignment: Alignment.center,
+                    child: AutoSizeText(
+                      session.title,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 1000,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ),
                 ),
-            ],
+                if (!isService)
+                  Expanded(
+                    flex: 6,
+                    child: Container(
+                      color: Colors.white,
+                      padding: const EdgeInsets.all(15.0),
+                      child: Center(
+                        child: IntrinsicWidth(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: session.speakers
+                                .map(
+                                  (Speaker speaker) =>
+                                      _OneSessionSpeakerItem(speaker: speaker),
+                                )
+                                .toList(growable: false),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
