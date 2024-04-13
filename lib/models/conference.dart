@@ -1,5 +1,5 @@
+import 'package:androidmakers_schedule/models/session.dart';
 import 'package:androidmakers_schedule/models/slot.dart';
-import 'package:androidmakers_schedule/utils/date_utils.dart';
 import 'package:ferry/typed_links.dart';
 
 part 'conference.g.dart';
@@ -28,14 +28,23 @@ class Conference {
   )   : startDate = slots.first.startDate,
         endDate = slots.last.endDate;
 
+  Iterable<Slot> slotsForRooms(Iterable<Room> rooms) {
+    return slots.map((Slot slot) {
+      return slot.copyWith(
+        sessions: slot.sessions.where(
+          (Session session) => rooms.contains(session.room),
+        ),
+      );
+    }).where((Slot slot) => slot.sessions.isNotEmpty);
+  }
+
   @override
   String toString() {
     return 'Conference{slots: $slots, startDate: $startDate, endDate: $endDate}';
   }
 
-  Iterable<Slot> getSlotsForDate(DateTime today) => slots.where(
-        (Slot slot) => slot.startDate.isSameDay(today),
-      );
+  Iterable<Slot> getSlotsForDate(DateTime today) =>
+      slots.getSlotsForDate(today);
 
   @override
   bool operator ==(Object other) =>

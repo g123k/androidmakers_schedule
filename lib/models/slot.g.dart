@@ -28,7 +28,7 @@ class SlotAdapter extends TypeAdapter<Slot> {
     writer
       ..writeByte(3)
       ..writeByte(0)
-      ..write(obj.sessions)
+      ..write(obj.sessions.toList())
       ..writeByte(1)
       ..write(obj.startDate)
       ..writeByte(2)

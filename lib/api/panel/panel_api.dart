@@ -9,18 +9,18 @@ class PanelAPI {
       ..setSelfSigned(status: true),
   );
 
-  Future<Iterable<PanelMessage>> getMessages() async {
+  Future<Iterable<PanelAPIMessage>> getMessages() async {
     final DocumentList documentList = await _db.listDocuments(
       databaseId: '660e71585b13ddc9102d',
       collectionId: '660e71901f9f51a7b86e',
     );
 
     return documentList.documents
-        .map((Document doc) => PanelMessage._fromDocument(doc));
+        .map((Document doc) => PanelAPIMessage._fromDocument(doc));
   }
 }
 
-class PanelMessage {
+class PanelAPIMessage {
   final String line1;
   final String? line2;
   final String? url;
@@ -28,16 +28,16 @@ class PanelMessage {
   final DateTime? startDate;
   final DateTime? endDate;
 
-  PanelMessage(
-    this.line1,
+  PanelAPIMessage({
+    required this.line1,
     this.line2,
     this.url,
     this.image,
     this.startDate,
     this.endDate,
-  );
+  });
 
-  PanelMessage._fromDocument(Document doc)
+  PanelAPIMessage._fromDocument(Document doc)
       : line1 = doc.data['line1'],
         line2 = doc.data['line2'],
         url = doc.data['link'],
@@ -57,7 +57,7 @@ class PanelMessage {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is PanelMessage &&
+      other is PanelAPIMessage &&
           runtimeType == other.runtimeType &&
           line1 == other.line1 &&
           line2 == other.line2 &&

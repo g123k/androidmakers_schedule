@@ -37,6 +37,10 @@ class _OneSessionHeader extends StatelessWidget {
     final CurrentSessionState slot =
         BlocProvider.of<CurrentSessionBloc>(context).state;
 
+    if (slot.currentSlot?.sessions.elementAtOrNull(0)?.type == 'service') {
+      return const SizedBox.shrink();
+    }
+
     final List<Widget> children;
 
     if (slot.isFirstSlot) {
@@ -52,6 +56,7 @@ class _OneSessionHeader extends StatelessWidget {
         const SizedBox(height: 10.0),
         const Text(
           'The event will begin in a few minutes',
+          textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 40.0,
             fontWeight: FontWeight.w500,
@@ -96,13 +101,15 @@ class _OneSessionItem extends StatelessWidget {
     final Slot slot =
         BlocProvider.of<CurrentSessionBloc>(context).state.currentSlot!;
     final Session session = slot.sessions.first;
+    final bool isService = session.type == 'service';
 
     return Row(
       children: <Widget>[
-        Expanded(
-          flex: 8,
-          child: RoomName(room: session.room),
-        ),
+        if (!isService)
+          Expanded(
+            flex: 8,
+            child: RoomName(room: session.room),
+          ),
         Expanded(
           flex: 90,
           child: Column(
@@ -128,27 +135,28 @@ class _OneSessionItem extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
-                flex: 6,
-                child: Container(
-                  color: Colors.white,
-                  padding: const EdgeInsets.all(15.0),
-                  child: Center(
-                    child: IntrinsicWidth(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: session.speakers
-                            .map(
-                              (Speaker speaker) =>
-                                  _OneSessionSpeakerItem(speaker: speaker),
-                            )
-                            .toList(growable: false),
+              if (!isService)
+                Expanded(
+                  flex: 6,
+                  child: Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.all(15.0),
+                    child: Center(
+                      child: IntrinsicWidth(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: session.speakers
+                              .map(
+                                (Speaker speaker) =>
+                                    _OneSessionSpeakerItem(speaker: speaker),
+                              )
+                              .toList(growable: false),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

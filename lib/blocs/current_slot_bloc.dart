@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:androidmakers_schedule/blocs/sessions_bloc.dart';
 import 'package:androidmakers_schedule/models/conference.dart';
+import 'package:androidmakers_schedule/models/session.dart';
 import 'package:androidmakers_schedule/models/slot.dart';
 import 'package:androidmakers_schedule/utils/date_utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,12 +17,15 @@ class _OnReloadCurrentSlot extends _CurrentSlotEvent {
 }
 
 class CurrentSessionBloc extends Bloc<_CurrentSlotEvent, CurrentSessionState> {
+  final List<Room> rooms;
+
   Conference? _currentConference;
   late StreamSubscription<SessionsState> _blocSubscription;
   late Timer _timer;
 
-  CurrentSessionBloc(SessionsBloc sessionsBloc)
-      : super(const CurrentSessionState._init()) {
+  CurrentSessionBloc(SessionsBloc sessionsBloc, this.rooms)
+      : assert(rooms.isNotEmpty),
+        super(const CurrentSessionState._init()) {
     on<_OnReloadCurrentSlot>(_onReloadCurrentSlot);
     _timer = Timer.periodic(const Duration(minutes: 1), (_) {
       add(const _OnReloadCurrentSlot());
@@ -49,14 +53,15 @@ class CurrentSessionBloc extends Bloc<_CurrentSlotEvent, CurrentSessionState> {
       final (DateTime now, DateTime minToday, DateTime maxToday) =
           DateUtils.today;
 
-      final List<Slot> slots = conference.slots;
+      final Iterable<Slot> slots = conference.slotsForRooms(rooms);
+
       if (minToday.isBeforeDay(conference.days.first) ||
           now.isBefore(conference.slots.first.startDate)) {
         emit(
           CurrentSessionState(
             isFirstSlot: true,
             currentSlot: slots.first,
-            nextSlot: slots.length > 1 ? slots[1] : null,
+            nextSlot: slots.length > 1 ? slots.elementAt(1) : null,
           ),
         );
       } else if (maxToday.isAfterDay(conference.slots.last.startDate)) {
@@ -67,7 +72,7 @@ class CurrentSessionBloc extends Bloc<_CurrentSlotEvent, CurrentSessionState> {
           ),
         );
       } else {
-        final Iterable<Slot> todaySlots = conference.getSlotsForDate(now);
+        final Iterable<Slot> todaySlots = slots.getSlotsForDate(now);
         final Iterable<Slot> upcomingSlots = todaySlots.where(
           (Slot slot) => now.isBefore(
             slot.startDate.add(

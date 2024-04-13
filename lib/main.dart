@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:androidmakers_schedule/blocs/current_slot_bloc.dart';
 import 'package:androidmakers_schedule/blocs/panel_bloc.dart';
 import 'package:androidmakers_schedule/blocs/sessions_bloc.dart';
 import 'package:androidmakers_schedule/models/session.dart';
@@ -18,8 +19,8 @@ void main() async {
   if (Platform.isLinux || Platform.isMacOS) {
     await windowManager.ensureInitialized();
 
-    const WindowOptions options = WindowOptions(
-      fullScreen: true,
+    final WindowOptions options = WindowOptions(
+      fullScreen: !Platform.isMacOS,
       titleBarStyle: TitleBarStyle.hidden,
     );
 
@@ -39,46 +40,56 @@ class MyApp extends StatelessWidget {
     return TopOverlay(
       clock: true,
       networkIndicator: true,
-      child: MultiBlocProvider(
-        providers: <BlocProvider<dynamic>>[
-          BlocProvider<SessionsBloc>(
-            create: (_) =>
-                SessionsBloc()..add(const ReloadSessionsEvent(force: true)),
-            child: BlocListener<SessionsBloc, SessionsState>(
-              listener: (BuildContext context, SessionsState state) {
-                if (state is LoadedSessionsState) {
-                  for (final Slot slot in state.slots) {
-                    for (final Session session in slot.sessions) {
-                      for (final Speaker speaker in session.speakers) {
-                        if (speaker.photo != null) {
-                          precacheImage(
-                            CachedNetworkImageProvider(speaker.photo!),
-                            context,
-                          );
-                        }
-                      }
-                    }
-                  }
-                }
-              },
+      child: BlocProvider<SessionsBloc>(
+        create: (_) => SessionsBloc()
+          ..add(
+            const ReloadSessionsEvent(force: true),
+          ),
+        child: BlocListener<SessionsBloc, SessionsState>(
+          listener: (BuildContext context, SessionsState state) {
+            if (state is LoadedSessionsState) {
+              _preloadImages(state, context);
+            }
+          },
+          child: BlocProvider<CurrentSessionBloc>(
+            create: (BuildContext context) => CurrentSessionBloc(
+              BlocProvider.of<SessionsBloc>(context),
+              <Room>[Room.officeHours],
+            ),
+            child: BlocProvider<PanelBloc>(
+              create: (BuildContext context) => PanelBloc(
+                BlocProvider.of<CurrentSessionBloc>(context),
+              )..add(const ReloadPanelContent()),
+              child: MaterialApp(
+                title: 'Flutter Demo',
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData(
+                  fontFamily: 'Montserrat',
+                  colorScheme: ColorScheme.fromSeed(seedColor: AppColors.red),
+                  scaffoldBackgroundColor: AppColors.lightBlue,
+                  useMaterial3: true,
+                ),
+                home: const HomePage(),
+              ),
             ),
           ),
-          BlocProvider<PanelBloc>(
-            create: (_) => PanelBloc()..add(const ReloadPanelContent()),
-          ),
-        ],
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            fontFamily: 'Montserrat',
-            colorScheme: ColorScheme.fromSeed(seedColor: AppColors.red),
-            scaffoldBackgroundColor: AppColors.lightBlue,
-            useMaterial3: true,
-          ),
-          home: const HomePage(),
         ),
       ),
     );
+  }
+
+  void _preloadImages(LoadedSessionsState state, BuildContext context) {
+    for (final Slot slot in state.slots) {
+      for (final Session session in slot.sessions) {
+        for (final Speaker speaker in session.speakers) {
+          if (speaker.photo != null) {
+            precacheImage(
+              CachedNetworkImageProvider(speaker.photo!),
+              context,
+            );
+          }
+        }
+      }
+    }
   }
 }

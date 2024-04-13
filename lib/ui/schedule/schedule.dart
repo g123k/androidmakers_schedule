@@ -1,5 +1,6 @@
 import 'package:androidmakers_schedule/blocs/current_slot_bloc.dart';
 import 'package:androidmakers_schedule/blocs/sessions_bloc.dart';
+import 'package:androidmakers_schedule/models/session.dart';
 import 'package:androidmakers_schedule/ui/sessions/one_session_layout.dart';
 import 'package:androidmakers_schedule/ui/sessions/up_to_four_sessions_layout.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +16,12 @@ class ScheduleScreen extends StatelessWidget {
         return BlocProvider<CurrentSessionBloc>(
           create: (BuildContext context) {
             return CurrentSessionBloc(
-              BlocProvider.of<SessionsBloc>(context),
-            );
+                BlocProvider.of<SessionsBloc>(context), <Room>[
+              Room.moebius,
+              Room.blin,
+              Room.twoZeroTwo,
+              Room.twoZeroFour,
+            ]);
           },
           child: BlocBuilder<CurrentSessionBloc, CurrentSessionState>(
             builder: (

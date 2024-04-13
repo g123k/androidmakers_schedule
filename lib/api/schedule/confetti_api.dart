@@ -26,7 +26,7 @@ class ConfettiAPI {
     );
 
     final HttpLink link = HttpLink(
-      'https://confetti-app.dev/graphql',
+      'https://androidmakers.fr/graphql',
       defaultHeaders: <String, String>{
         'conference': 'androidmakers2024',
       },

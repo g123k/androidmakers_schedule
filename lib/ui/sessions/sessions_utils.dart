@@ -23,6 +23,7 @@ class RoomName extends StatelessWidget {
         quarterTurns: 3,
         child: AutoSizeText(
           _padRoomName(room?.name.toUpperCase() ?? ''),
+          maxLines: 1,
           style: const TextStyle(
             color: Colors.white,
             fontSize: 30,

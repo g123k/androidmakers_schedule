@@ -274,9 +274,7 @@ class _SpeakersPhotos extends StatelessWidget {
                     backgroundImage: image,
                   );
                 },
-                errorListener: (_) {
-                  print('erreur');
-                },
+                errorListener: (_) {},
               ),
             ),
         ],

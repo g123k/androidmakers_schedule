@@ -131,16 +131,18 @@ class Speaker {
 @HiveType(typeId: 104)
 enum Room {
   @HiveField(0)
-  first('Moebius'),
+  moebius('Moebius'),
   @HiveField(1)
-  second('Blin'),
+  blin('Blin'),
   @HiveField(2)
-  third('2.02'),
+  twoZeroTwo('2.02'),
   @HiveField(3)
-  forth('2.04'),
+  twoZeroFour('2.04'),
   @HiveField(4)
-  fifth('Dev Lounge'),
+  devLounge('Dev Lounge'),
   @HiveField(5)
+  officeHours('Office Hour'),
+  @HiveField(6)
   unknown('-');
 
   final String name;
@@ -153,6 +155,10 @@ enum Room {
     }
 
     final String realName = name.replaceFirst('Salle', '').trim().toLowerCase();
+    // Special case
+    if (realName.contains('office hour')) {
+      return Room.officeHours;
+    }
 
     return Room.values.firstWhere(
       (Room element) => element.name.toLowerCase() == realName,

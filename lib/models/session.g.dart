@@ -145,42 +145,47 @@ class RoomAdapter extends TypeAdapter<Room> {
   Room read(BinaryReader reader) {
     switch (reader.readByte()) {
       case 0:
-        return Room.first;
+        return Room.moebius;
       case 1:
-        return Room.second;
+        return Room.blin;
       case 2:
-        return Room.third;
+        return Room.twoZeroTwo;
       case 3:
-        return Room.forth;
+        return Room.twoZeroFour;
       case 4:
-        return Room.fifth;
+        return Room.devLounge;
       case 5:
+        return Room.officeHours;
+      case 6:
         return Room.unknown;
       default:
-        return Room.first;
+        return Room.moebius;
     }
   }
 
   @override
   void write(BinaryWriter writer, Room obj) {
     switch (obj) {
-      case Room.first:
+      case Room.moebius:
         writer.writeByte(0);
         break;
-      case Room.second:
+      case Room.blin:
         writer.writeByte(1);
         break;
-      case Room.third:
+      case Room.twoZeroTwo:
         writer.writeByte(2);
         break;
-      case Room.forth:
+      case Room.twoZeroFour:
         writer.writeByte(3);
         break;
-      case Room.fifth:
+      case Room.devLounge:
         writer.writeByte(4);
         break;
-      case Room.unknown:
+      case Room.officeHours:
         writer.writeByte(5);
+        break;
+      case Room.unknown:
+        writer.writeByte(6);
         break;
     }
   }
