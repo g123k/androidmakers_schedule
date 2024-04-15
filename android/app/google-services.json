@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "794557958030",
+    "firebase_url": "https://android-makers-b6f6a-default-rtdb.firebaseio.com",
+    "project_id": "android-makers-b6f6a",
+    "storage_bucket": "android-makers-b6f6a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:794557958030:android:acca273fa2b877dda886df",
+        "android_client_info": {
+          "package_name": "com.androidmakers.schedule"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "794557958030-3u8i0r221hdu745sg0pohsm4o1maetk7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAu5p9QWu-BlbAMO4LQq3WQWj1K6IvBH8I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "794557958030-3u8i0r221hdu745sg0pohsm4o1maetk7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "794557958030-dcq3mip2ispcqprertdv1kjtrkkor0ds.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.androidMakersChrono.RunnerTests"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
