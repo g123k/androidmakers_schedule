@@ -1,5 +1,6 @@
 import 'package:androidmakers_schedule/ui/overlays/clock.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class TopOverlay extends StatelessWidget {
@@ -68,7 +69,9 @@ class _NetworkIndicatorState extends State<_NetworkIndicator> {
   }
 
   Color? _getColor(List<ConnectivityResult>? data) {
-    if (data == null) {
+    if (kIsWeb) {
+      return null;
+    } else if (data == null) {
       return Colors.black;
     } else if (data.isEmpty) {
       return Colors.orange;

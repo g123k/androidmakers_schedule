@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:androidmakers_schedule/blocs/current_slot_bloc.dart';
 import 'package:androidmakers_schedule/blocs/panel_bloc.dart';
 import 'package:androidmakers_schedule/blocs/sessions_bloc.dart';
@@ -9,6 +7,7 @@ import 'package:androidmakers_schedule/ui/homepage/homepage.dart';
 import 'package:androidmakers_schedule/ui/overlays/network_indicator.dart';
 import 'package:androidmakers_schedule/ui/res/app_colors.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:window_manager/window_manager.dart';
@@ -16,11 +15,11 @@ import 'package:window_manager/window_manager.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  if (Platform.isLinux || Platform.isMacOS) {
+  if (!kIsWeb) {
     await windowManager.ensureInitialized();
 
-    final WindowOptions options = WindowOptions(
-      fullScreen: !Platform.isMacOS,
+    const WindowOptions options = WindowOptions(
+      fullScreen: true,
       titleBarStyle: TitleBarStyle.hidden,
     );
 
@@ -29,6 +28,7 @@ void main() async {
       await windowManager.focus();
     });
   }
+
   runApp(const MyApp());
 }
 
